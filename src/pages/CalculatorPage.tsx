@@ -141,12 +141,12 @@ export function CalculatorPage() {
         >
           CUSTOM AMOUNT
         </p>
-        <div className="flex gap-3 w-full">
+        <div className="flex gap-3 w-full items-stretch">
           <input
             type="number"
             value={customValue}
             onChange={e => setCustomValue(e.target.value)}
-            className="flex-1 bg-[#0D0D1F] border border-white/20 text-white text-center text-xl p-4 rounded-lg outline-none focus:border-[#00FFFF]/50 transition-colors"
+            className="flex-1 min-w-0 bg-[#0D0D1F] border border-white/20 text-white text-center text-xl p-4 rounded-lg outline-none focus:border-[#00FFFF]/50 transition-colors"
             style={{ fontFamily: 'Share Tech Mono, monospace' }}
             placeholder="0"
             inputMode="numeric"
@@ -159,12 +159,14 @@ export function CalculatorPage() {
                 setCustomValue('');
               }
             }}
-            className="cyber-btn px-6 rounded-lg border font-bold text-lg"
+            className="cyber-btn rounded-lg border font-bold text-2xl flex-shrink-0"
             style={{
               fontFamily: 'Share Tech Mono, monospace',
               borderColor: '#00FFFF40',
               color: '#00FFFF',
               backgroundColor: '#00FFFF10',
+              width: '64px',
+              height: '64px',
             }}
           >
             +
@@ -177,12 +179,14 @@ export function CalculatorPage() {
                 setCustomValue('');
               }
             }}
-            className="cyber-btn px-6 rounded-lg border font-bold text-lg"
+            className="cyber-btn rounded-lg border font-bold text-2xl flex-shrink-0"
             style={{
               fontFamily: 'Share Tech Mono, monospace',
               borderColor: '#FF00FF40',
               color: '#FF00FF',
               backgroundColor: '#FF00FF10',
+              width: '64px',
+              height: '64px',
             }}
           >
             -
