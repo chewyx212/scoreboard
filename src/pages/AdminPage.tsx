@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../config/supabase';
 import type { Team } from '../types/team';
 
@@ -12,6 +13,7 @@ export function AdminPage() {
   const [pwShake, setPwShake] = useState(false);
   const [pwError, setPwError] = useState(false);
 
+  const navigate = useNavigate();
   const [teams, setTeams] = useState<Team[]>([]);
   const [names, setNames] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<Record<string, boolean>>({});
@@ -135,6 +137,7 @@ export function AdminPage() {
           MANAGE GROUP NAMES
         </p>
 
+        {/* Name editors */}
         <div className="flex flex-col gap-4 w-full">
           {teams.map(team => (
             <div key={team.team_id} className="flex items-center gap-3">
@@ -170,6 +173,40 @@ export function AdminPage() {
                 {saving[team.team_id] ? '...' : saved[team.team_id] ? 'SAVED' : 'SAVE'}
               </button>
             </div>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div
+          className="w-full h-[1px] my-8 opacity-20"
+          style={{ background: 'linear-gradient(90deg, transparent, #BF00FF, transparent)' }}
+        />
+
+        {/* Quick access to team calculators */}
+        <p className="text-white/30 text-sm tracking-[0.4em] uppercase mb-4" style={{ fontFamily: 'Rajdhani, sans-serif' }}>
+          QUICK ACCESS — CALCULATORS
+        </p>
+        <div className="grid grid-cols-2 gap-3 w-full">
+          {teams.map(team => (
+            <button
+              key={team.team_id}
+              onClick={() => navigate(`/team/${team.team_id}`)}
+              className="cyber-btn h-16 rounded-lg border font-bold text-base tracking-widest flex items-center justify-center gap-3"
+              style={{
+                fontFamily: 'Orbitron, sans-serif',
+                borderColor: `${team.color}40`,
+                color: team.color,
+                backgroundColor: `${team.color}10`,
+                boxShadow: `0 0 10px ${team.color}20`,
+                textShadow: `0 0 8px ${team.color}`,
+              }}
+            >
+              <span
+                className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ backgroundColor: team.color, boxShadow: `0 0 6px ${team.color}` }}
+              />
+              {names[team.team_id] || team.name}
+            </button>
           ))}
         </div>
       </div>
