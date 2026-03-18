@@ -94,7 +94,7 @@ export function CalculatorPage() {
             <button
               key={`add-${v}`}
               onClick={() => handleAdjust(v)}
-              className="cyber-btn py-5 rounded-lg border text-lg font-bold"
+              className="cyber-btn h-16 rounded-lg border text-lg font-bold"
               style={{
                 fontFamily: 'Share Tech Mono, monospace',
                 borderColor: '#00FF4140',
@@ -120,7 +120,7 @@ export function CalculatorPage() {
             <button
               key={`sub-${v}`}
               onClick={() => handleAdjust(-v)}
-              className="cyber-btn py-5 rounded-lg border text-lg font-bold"
+              className="cyber-btn h-16 rounded-lg border text-lg font-bold"
               style={{
                 fontFamily: 'Share Tech Mono, monospace',
                 borderColor: '#FF00FF40',
@@ -166,7 +166,7 @@ export function CalculatorPage() {
               color: '#00FFFF',
               backgroundColor: '#00FFFF10',
               width: '64px',
-              height: '64px',
+              height: '64px',  /* matches h-16 */
             }}
           >
             +
@@ -186,7 +186,7 @@ export function CalculatorPage() {
               color: '#FF00FF',
               backgroundColor: '#FF00FF10',
               width: '64px',
-              height: '64px',
+              height: '64px',  /* matches h-16 */
             }}
           >
             -
