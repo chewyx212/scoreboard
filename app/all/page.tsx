@@ -16,7 +16,6 @@ function TeamCalculatorCard({
   team: Team
   onAdjust: (teamId: string, delta: number) => Promise<void>
 }) {
-  const [customValue, setCustomValue] = useState('')
   const [animating, setAnimating] = useState(false)
 
   async function handleAdjust(delta: number) {
@@ -28,37 +27,49 @@ function TeamCalculatorCard({
 
   return (
     <div
-      className="flex flex-col p-4 rounded-lg bg-[#0A0A12] border"
+      className="flex flex-col items-center px-4 pt-5 pb-5 rounded-lg bg-[#0A0A12] border"
       style={{ borderColor: `${team.color}30`, boxShadow: `0 0 15px ${team.color}10` }}
     >
-      {/* Header row: name + points */}
-      <div className="flex items-center justify-between mb-3">
-        <h2
-          className="text-base sm:text-lg tracking-[0.2em] uppercase neon-text-soft truncate mr-2"
-          style={{ fontFamily: 'Orbitron, sans-serif', color: team.color }}
-        >
-          {team.name}
-        </h2>
-        <div
-          className={`text-3xl font-bold flex-shrink-0 ${animating ? 'animate-number-pop' : ''}`}
-          style={{
-            fontFamily: 'Share Tech Mono, monospace',
-            color: '#ffffff',
-            textShadow: `0 0 12px ${team.color}`,
-          }}
-        >
-          {team.points.toLocaleString()}
-        </div>
-      </div>
+      {/* Team Name — centered, old-page style */}
+      <h2
+        className="text-base sm:text-lg tracking-[0.2em] uppercase neon-text-soft"
+        style={{ fontFamily: 'Orbitron, sans-serif', color: team.color }}
+      >
+        {team.name}
+      </h2>
 
-      {/* Divider */}
+      {/* Decorative line */}
       <div
-        className="w-full h-[1px] mb-3 opacity-20"
+        className="w-32 h-[1px] my-3 opacity-50"
         style={{ background: `linear-gradient(90deg, transparent, ${team.color}, transparent)` }}
       />
 
+      {/* Points */}
+      <div
+        className={`text-5xl font-bold ${animating ? 'animate-number-pop' : ''}`}
+        style={{
+          fontFamily: 'Share Tech Mono, monospace',
+          color: '#ffffff',
+          textShadow: `0 0 20px ${team.color}, 0 0 40px ${team.color}`,
+        }}
+      >
+        {team.points.toLocaleString()}
+      </div>
+      <p
+        className="text-white/40 text-xs tracking-[0.5em] uppercase mt-1 mb-4"
+        style={{ fontFamily: 'Rajdhani, sans-serif' }}
+      >
+        POINTS
+      </p>
+
       {/* Add Buttons */}
-      <div className="grid grid-cols-3 gap-2 mb-2">
+      <p
+        className="text-xs tracking-[0.4em] uppercase mb-2 opacity-40"
+        style={{ fontFamily: 'Rajdhani, sans-serif' }}
+      >
+        ADD POINTS
+      </p>
+      <div className="grid grid-cols-3 gap-2 w-full mb-4">
         {presets.map(v => (
           <button
             key={`add-${v}`}
@@ -77,7 +88,13 @@ function TeamCalculatorCard({
       </div>
 
       {/* Deduct Buttons */}
-      <div className="grid grid-cols-3 gap-2 mb-3">
+      <p
+        className="text-xs tracking-[0.4em] uppercase mb-2 opacity-40"
+        style={{ fontFamily: 'Rajdhani, sans-serif' }}
+      >
+        DEDUCT POINTS
+      </p>
+      <div className="grid grid-cols-3 gap-2 w-full">
         {presets.map(v => (
           <button
             key={`sub-${v}`}
@@ -93,59 +110,6 @@ function TeamCalculatorCard({
             -{v}
           </button>
         ))}
-      </div>
-
-      {/* Custom Amount */}
-      <div className="flex gap-2 items-stretch">
-        <input
-          type="number"
-          value={customValue}
-          onChange={e => setCustomValue(e.target.value)}
-          className="flex-1 min-w-0 bg-[#0D0D1F] border border-white/20 text-white text-center text-base p-2 rounded outline-none focus:border-[#00FFFF]/50 transition-colors"
-          style={{ fontFamily: 'Share Tech Mono, monospace' }}
-          placeholder="0"
-          inputMode="numeric"
-        />
-        <button
-          onClick={() => {
-            const val = parseInt(customValue)
-            if (!isNaN(val)) {
-              handleAdjust(val)
-              setCustomValue('')
-            }
-          }}
-          className="cyber-btn rounded border font-bold text-xl flex-shrink-0"
-          style={{
-            fontFamily: 'Share Tech Mono, monospace',
-            borderColor: '#00FFFF40',
-            color: '#00FFFF',
-            backgroundColor: '#00FFFF10',
-            width: '40px',
-            height: '40px',
-          }}
-        >
-          +
-        </button>
-        <button
-          onClick={() => {
-            const val = parseInt(customValue)
-            if (!isNaN(val)) {
-              handleAdjust(-val)
-              setCustomValue('')
-            }
-          }}
-          className="cyber-btn rounded border font-bold text-xl flex-shrink-0"
-          style={{
-            fontFamily: 'Share Tech Mono, monospace',
-            borderColor: '#FF00FF40',
-            color: '#FF00FF',
-            backgroundColor: '#FF00FF10',
-            width: '40px',
-            height: '40px',
-          }}
-        >
-          -
-        </button>
       </div>
     </div>
   )
