@@ -1,28 +1,30 @@
-import { useState } from 'react';
-import { checkPassword } from '../config/passwords';
+'use client'
+
+import { useState } from 'react'
+import { checkPassword } from '@/lib/passwords'
 
 interface PasswordModalProps {
-  teamId: string;
-  onSuccess: () => void;
+  teamId: string
+  onSuccess: () => void
 }
 
 export function PasswordModal({ teamId, onSuccess }: PasswordModalProps) {
-  const [input, setInput] = useState('');
-  const [shake, setShake] = useState(false);
-  const [error, setError] = useState(false);
+  const [input, setInput] = useState('')
+  const [shake, setShake] = useState(false)
+  const [error, setError] = useState(false)
 
   function handleSubmit() {
     if (checkPassword(teamId, input)) {
-      sessionStorage.setItem(`auth_${teamId}`, 'true');
-      onSuccess();
+      sessionStorage.setItem(`auth_${teamId}`, 'true')
+      onSuccess()
     } else {
-      setError(true);
-      setShake(true);
+      setError(true)
+      setShake(true)
       setTimeout(() => {
-        setShake(false);
-        setError(false);
-      }, 600);
-      setInput('');
+        setShake(false)
+        setError(false)
+      }, 600)
+      setInput('')
     }
   }
 
@@ -102,5 +104,5 @@ export function PasswordModal({ teamId, onSuccess }: PasswordModalProps) {
         </button>
       </div>
     </div>
-  );
+  )
 }

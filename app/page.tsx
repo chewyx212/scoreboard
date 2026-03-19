@@ -1,8 +1,10 @@
-import { useAllTeams } from '../hooks/useAllTeams';
-import { TeamCard } from '../components/TeamCard';
+'use client'
 
-export function ScoreboardPage() {
-  const { teams, loading, lastChanged } = useAllTeams();
+import { useAllTeams } from '@/hooks/useAllTeams'
+import { TeamCard } from '@/components/TeamCard'
+
+export default function ScoreboardPage() {
+  const { teams, loading, lastChanged } = useAllTeams()
 
   if (loading) {
     return (
@@ -14,7 +16,7 @@ export function ScoreboardPage() {
           INITIALIZING...
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -29,5 +31,5 @@ export function ScoreboardPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }

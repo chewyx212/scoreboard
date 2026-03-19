@@ -1,65 +1,69 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '../config/supabase';
-import type { Team } from '../types/team';
+'use client'
 
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
+import type { Team } from '@/types/team'
 
-export function AdminPage() {
-  const [isAuthed, setIsAuthed] = useState(
-    () => sessionStorage.getItem('auth_admin') === 'true'
-  );
-  const [pwInput, setPwInput] = useState('');
-  const [pwShake, setPwShake] = useState(false);
-  const [pwError, setPwError] = useState(false);
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD
 
-  const navigate = useNavigate();
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [names, setNames] = useState<Record<string, string>>({});
-  const [saving, setSaving] = useState<Record<string, boolean>>({});
-  const [saved, setSaved] = useState<Record<string, boolean>>({});
-  const [loading, setLoading] = useState(true);
+export default function AdminPage() {
+  const [isAuthed, setIsAuthed] = useState(false)
+  const [pwInput, setPwInput] = useState('')
+  const [pwShake, setPwShake] = useState(false)
+  const [pwError, setPwError] = useState(false)
+
+  const router = useRouter()
+  const [teams, setTeams] = useState<Team[]>([])
+  const [names, setNames] = useState<Record<string, string>>({})
+  const [saving, setSaving] = useState<Record<string, boolean>>({})
+  const [saved, setSaved] = useState<Record<string, boolean>>({})
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!isAuthed) return;
+    setIsAuthed(sessionStorage.getItem('auth_admin') === 'true')
+  }, [])
+
+  useEffect(() => {
+    if (!isAuthed) return
     supabase
       .from('teams')
       .select('*')
       .order('team_id')
       .then(({ data }) => {
         if (data) {
-          setTeams(data);
-          const initNames: Record<string, string> = {};
-          data.forEach(t => { initNames[t.team_id] = t.name; });
-          setNames(initNames);
+          setTeams(data)
+          const initNames: Record<string, string> = {}
+          data.forEach(t => { initNames[t.team_id] = t.name })
+          setNames(initNames)
         }
-        setLoading(false);
-      });
-  }, [isAuthed]);
+        setLoading(false)
+      })
+  }, [isAuthed])
 
   function handleLogin() {
     if (pwInput === ADMIN_PASSWORD) {
-      sessionStorage.setItem('auth_admin', 'true');
-      setIsAuthed(true);
+      sessionStorage.setItem('auth_admin', 'true')
+      setIsAuthed(true)
     } else {
-      setPwError(true);
-      setPwShake(true);
-      setTimeout(() => { setPwShake(false); setPwError(false); }, 600);
-      setPwInput('');
+      setPwError(true)
+      setPwShake(true)
+      setTimeout(() => { setPwShake(false); setPwError(false) }, 600)
+      setPwInput('')
     }
   }
 
   async function handleSave(teamId: string) {
-    const newName = names[teamId]?.trim();
-    if (!newName) return;
-    setSaving(prev => ({ ...prev, [teamId]: true }));
+    const newName = names[teamId]?.trim()
+    if (!newName) return
+    setSaving(prev => ({ ...prev, [teamId]: true }))
     await supabase
       .from('teams')
       .update({ name: newName })
-      .eq('team_id', teamId);
-    setSaving(prev => ({ ...prev, [teamId]: false }));
-    setSaved(prev => ({ ...prev, [teamId]: true }));
-    setTimeout(() => setSaved(prev => ({ ...prev, [teamId]: false })), 2000);
+      .eq('team_id', teamId)
+    setSaving(prev => ({ ...prev, [teamId]: false }))
+    setSaved(prev => ({ ...prev, [teamId]: true }))
+    setTimeout(() => setSaved(prev => ({ ...prev, [teamId]: false })), 2000)
   }
 
   if (!isAuthed) {
@@ -110,7 +114,7 @@ export function AdminPage() {
           </button>
         </div>
       </div>
-    );
+    )
   }
 
   if (loading) {
@@ -120,7 +124,7 @@ export function AdminPage() {
           LOADING...
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -190,7 +194,7 @@ export function AdminPage() {
           {teams.map(team => (
             <button
               key={team.team_id}
-              onClick={() => navigate(`/team/${team.team_id}`)}
+              onClick={() => router.push(`/team/${team.team_id}`)}
               className="cyber-btn h-16 rounded-lg border font-bold text-base tracking-widest flex items-center justify-center gap-3"
               style={{
                 fontFamily: 'Orbitron, sans-serif',
@@ -211,5 +215,5 @@ export function AdminPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

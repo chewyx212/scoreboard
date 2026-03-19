@@ -1,8 +1,10 @@
-import type { Team } from '../types/team';
+'use client'
+
+import type { Team } from '@/types/team'
 
 interface TeamCardProps {
-  team: Team;
-  isHighlighted: boolean;
+  team: Team
+  isHighlighted: boolean
 }
 
 export function TeamCard({ team, isHighlighted }: TeamCardProps) {
@@ -82,5 +84,5 @@ export function TeamCard({ team, isHighlighted }: TeamCardProps) {
         style={{ background: `linear-gradient(90deg, transparent, ${team.color}, transparent)` }}
       />
     </div>
-  );
+  )
 }

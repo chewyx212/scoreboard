@@ -1,26 +1,30 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useTeam } from '../hooks/useTeam';
-import { PasswordModal } from '../components/PasswordModal';
+'use client'
 
-export function CalculatorPage() {
-  const { teamId } = useParams<{ teamId: string }>();
-  const [isAuthed, setIsAuthed] = useState(
-    () => sessionStorage.getItem(`auth_${teamId}`) === 'true'
-  );
-  const { team, loading, adjustPoints } = useTeam(teamId!);
-  const [customValue, setCustomValue] = useState('');
-  const [animating, setAnimating] = useState(false);
+import { useState, useEffect } from 'react'
+import { useParams } from 'next/navigation'
+import { useTeam } from '@/hooks/useTeam'
+import { PasswordModal } from '@/components/PasswordModal'
+
+export default function CalculatorPage() {
+  const { teamId } = useParams<{ teamId: string }>()
+  const [isAuthed, setIsAuthed] = useState(false)
+
+  useEffect(() => {
+    setIsAuthed(sessionStorage.getItem(`auth_${teamId}`) === 'true')
+  }, [teamId])
+  const { team, loading, adjustPoints } = useTeam(teamId!)
+  const [customValue, setCustomValue] = useState('')
+  const [animating, setAnimating] = useState(false)
 
   async function handleAdjust(delta: number) {
-    if (delta === 0) return;
-    setAnimating(true);
-    await adjustPoints(delta);
-    setTimeout(() => setAnimating(false), 300);
+    if (delta === 0) return
+    setAnimating(true)
+    await adjustPoints(delta)
+    setTimeout(() => setAnimating(false), 300)
   }
 
   if (!isAuthed) {
-    return <PasswordModal teamId={teamId!} onSuccess={() => setIsAuthed(true)} />;
+    return <PasswordModal teamId={teamId!} onSuccess={() => setIsAuthed(true)} />
   }
 
   if (loading) {
@@ -33,7 +37,7 @@ export function CalculatorPage() {
           LOADING...
         </div>
       </div>
-    );
+    )
   }
 
   if (!team) {
@@ -43,10 +47,10 @@ export function CalculatorPage() {
           TEAM NOT FOUND
         </div>
       </div>
-    );
+    )
   }
 
-  const presets = [10, 50, 100];
+  const presets = [10, 50, 100]
 
   return (
     <div className="min-h-screen bg-[#050508] cyber-grid scanlines flex items-center justify-center">
@@ -153,10 +157,10 @@ export function CalculatorPage() {
           />
           <button
             onClick={() => {
-              const val = parseInt(customValue);
+              const val = parseInt(customValue)
               if (!isNaN(val)) {
-                handleAdjust(val);
-                setCustomValue('');
+                handleAdjust(val)
+                setCustomValue('')
               }
             }}
             className="cyber-btn rounded-lg border font-bold text-2xl flex-shrink-0"
@@ -166,17 +170,17 @@ export function CalculatorPage() {
               color: '#00FFFF',
               backgroundColor: '#00FFFF10',
               width: '64px',
-              height: '64px',  /* matches h-16 */
+              height: '64px',
             }}
           >
             +
           </button>
           <button
             onClick={() => {
-              const val = parseInt(customValue);
+              const val = parseInt(customValue)
               if (!isNaN(val)) {
-                handleAdjust(-val);
-                setCustomValue('');
+                handleAdjust(-val)
+                setCustomValue('')
               }
             }}
             className="cyber-btn rounded-lg border font-bold text-2xl flex-shrink-0"
@@ -186,7 +190,7 @@ export function CalculatorPage() {
               color: '#FF00FF',
               backgroundColor: '#FF00FF10',
               width: '64px',
-              height: '64px',  /* matches h-16 */
+              height: '64px',
             }}
           >
             -
@@ -197,5 +201,5 @@ export function CalculatorPage() {
         <div className="h-8" />
       </div>
     </div>
-  );
+  )
 }

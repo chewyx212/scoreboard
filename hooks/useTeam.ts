@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../config/supabase';
-import type { Team } from '../types/team';
+import { useState, useEffect, useCallback } from 'react'
+import { supabase } from '@/lib/supabase'
+import type { Team } from '@/types/team'
 
 export function useTeam(teamId: string) {
-  const [team, setTeam] = useState<Team | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [team, setTeam] = useState<Team | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchTeam() {
@@ -13,14 +13,14 @@ export function useTeam(teamId: string) {
         .from('teams')
         .select('*')
         .eq('team_id', teamId)
-        .single();
+        .single()
 
-      if (error) setError(error.message);
-      else setTeam(data);
-      setLoading(false);
+      if (error) setError(error.message)
+      else setTeam(data)
+      setLoading(false)
     }
 
-    fetchTeam();
+    fetchTeam()
 
     // Subscribe to all team updates, filter client-side
     // (column-level filters require REPLICA IDENTITY FULL — avoid it)
@@ -30,29 +30,29 @@ export function useTeam(teamId: string) {
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'teams' },
         (payload) => {
-          const updated = payload.new as Team;
-          if (updated.team_id === teamId) setTeam(updated);
+          const updated = payload.new as Team
+          if (updated.team_id === teamId) setTeam(updated)
         }
       )
-      .subscribe();
+      .subscribe()
 
     return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [teamId]);
+      supabase.removeChannel(channel)
+    }
+  }, [teamId])
 
   const adjustPoints = useCallback(async (delta: number) => {
-    if (!team) return;
-    const newPoints = team.points + delta;
+    if (!team) return
+    const newPoints = team.points + delta
     const { data, error } = await supabase
       .from('teams')
       .update({ points: newPoints, updated_at: new Date().toISOString() })
       .eq('team_id', teamId)
       .select()
-      .single();
+      .single()
 
-    if (!error && data) setTeam(data);
-  }, [team, teamId]);
+    if (!error && data) setTeam(data)
+  }, [team, teamId])
 
-  return { team, loading, error, adjustPoints };
+  return { team, loading, error, adjustPoints }
 }
